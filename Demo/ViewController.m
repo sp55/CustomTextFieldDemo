@@ -4,7 +4,8 @@
 //
 //  Created by admin on 16/5/13.
 //  Copyright © 2016年 AlezJi. All rights reserved.
-//
+//http://blog.csdn.net/liuyang11908/article/details/50814865
+// IOS TextField 输入银行卡号格式化（每四位中间空一格）
 
 #import "ViewController.h"
 #define kScreenWidth [UIScreen mainScreen].bounds.size.width
@@ -54,7 +55,7 @@
     
     self.textField=[[UITextField alloc]initWithFrame:CGRectMake(35,84, kScreenWidth-70, 40)];
     self.textField.borderStyle = UITextBorderStyleRoundedRect;
-    self.textField.placeholder = @"随便输入";
+    self.textField.placeholder = @"银行卡输入";
     self.textField.delegate = self;
     [self.textField setClearButtonMode:UITextFieldViewModeAlways];
 //    [self.textField setKeyboardType:UIKeyboardTypeNumberPad];
@@ -64,6 +65,57 @@
     [self.view addSubview:self.textField];
     
 }
+
+-(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+    
+    if (textField == self.textField) {
+        NSString *text = [self.textField text];
+        
+        NSCharacterSet *characterSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789\b"];
+        string = [string stringByReplacingOccurrencesOfString:@" " withString:@""];
+        if ([string rangeOfCharacterFromSet:[characterSet invertedSet]].location != NSNotFound) {
+            return NO;
+        }
+        
+        text = [text stringByReplacingCharactersInRange:range withString:string];
+        text = [text stringByReplacingOccurrencesOfString:@" " withString:@""];
+        
+        NSString *newString = @"";
+        while (text.length > 0) {
+            NSString *subString = [text substringToIndex:MIN(text.length, 4)];
+            newString = [newString stringByAppendingString:subString];
+            if (subString.length == 4) {
+                newString = [newString stringByAppendingString:@" "];
+            }
+            text = [text substringFromIndex:MIN(text.length, 4)];
+        }
+        
+        newString = [newString stringByTrimmingCharactersInSet:[characterSet invertedSet]];
+        
+        // 限制长度
+        if (newString.length >= 24) {
+            return NO;
+        }
+        
+        [self.textField setText:newString];
+        
+        return NO;
+        
+    }
+    return YES;
+}
+
+
+// 银行卡号转正常号 － 去除4位间的空格
+-(NSString *)bankNumToNormalNum
+{
+    return [self.textField.text stringByReplacingOccurrencesOfString:@" " withString:@""];
+}
+
+
+
+
+
 
 #pragma mark  - 保存
 -(void)saveAction:(UIButton *)btn
