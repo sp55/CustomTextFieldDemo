@@ -6,6 +6,8 @@
 //  Copyright © 2016年 AlezJi. All rights reserved.
 //http://blog.csdn.net/liuyang11908/article/details/50814865
 // IOS TextField 输入银行卡号格式化（每四位中间空一格）
+//http://blog.csdn.net/u012701023/article/details/50537419
+//再来一个方法
 
 #import "ViewController.h"
 #define kScreenWidth [UIScreen mainScreen].bounds.size.width
